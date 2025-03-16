@@ -1,0 +1,295 @@
+import numpy as np
+from statsmodels.stats.contingency_tables import cochrans_q
+
+
+# ----------------------------------------------
+# ChatGPT Free - Performance Data
+# ----------------------------------------------
+# Each row represents a different problem type, and each column represents a test case.
+# Binary values: 1 = Correct, 0 = Incorrect
+
+
+chatgpt_free_data = np.array([
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Just the Problem
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Intuition & Insights
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Olympiad Problem & Solution
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],  # AIME Problem & Just Answer
+    [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],  # AIME Problem & Worked Solution
+]).T  # Transpose to match the expected (rows = trials, cols = conditions) format
+
+
+# Running Cochran’s Q Test for ChatGPT Free
+free_test_result = cochrans_q(chatgpt_free_data)
+
+
+# Print results
+print(f"ChatGPT Free - Q Statistic: {free_test_result.statistic:.4f}, p-value: {free_test_result.pvalue:.4f}")
+
+
+# ----------------------------------------------
+# ChatGPT Premium - Performance Data
+# ----------------------------------------------
+
+
+chatgpt_premium_data = np.array([
+    [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0],  # Just the Problem
+    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0],  # Intuition & Insights
+    [1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],  # Olympiad Problem & Solution
+    [1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0],  # AIME Problem & Just Answer
+    [1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0],  # AIME Problem & Worked Solution
+]).T  
+
+
+# Running Cochran’s Q Test for ChatGPT Premium
+premium_test_result = cochrans_q(chatgpt_premium_data)
+
+
+# Print results
+print(f"ChatGPT Premium - Q Statistic: {premium_test_result.statistic:.4f}, p-value: {premium_test_result.pvalue:.4f}")
+
+
+# ----------------------------------------------
+# Gemini - Performance Data
+# ----------------------------------------------
+gemini_data = np.array([
+    [1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0],  # Just the Problem
+    [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # Intuition & Insights
+    [1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0],  # Olympiad Problem & Solution
+    [1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # AIME Problem & Just Answer
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # AIME Problem & Worked Solution
+]).T  
+
+
+# Running Cochran’s Q Test for Gemini
+gemini_test_result = cochrans_q(gemini_data)
+
+
+# Print results
+print(f"Gemini - Q Statistic: {gemini_test_result.statistic:.4f}, p-value: {gemini_test_result.pvalue:.4f}")
+
+
+# ----------------------------------------------
+# Summary Notes:
+# - The Q Statistic helps us determine whether there's a significant difference in correctness.
+# - A low p-value (< 0.05) suggests at least one problem type is significantly different in accuracy.
+# - High p-values suggest uniform performance across problem types.
+
+# McNemar's test
+# ----------------------------------------------
+
+import numpy as np
+from statsmodels.stats.contingency_tables import mcnemar
+
+
+# ----------------------------------------------
+# Define LLM Performance Data
+# ----------------------------------------------
+# Each key represents an LLM model, and the values contain accuracy results
+# (1 = correct, 0 = incorrect) for different question types.
+
+
+llm_data = {
+    "ChatGPT Free": {
+        "Just the Problem": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "Intuition & Insights": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "Olympiad Problem & Solution": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Just Answer": [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Worked Solution": [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+    },
+    "ChatGPT Premium": {
+        "Just the Problem": [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+        "Intuition & Insights": [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0],
+        "Olympiad Problem & Solution": [1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Just Answer": [1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Worked Solution": [1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+    },
+    "Gemini": {
+        "Just the Problem": [1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+        "Intuition & Insights": [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "Olympiad Problem & Solution": [1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Just Answer": [1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Worked Solution": [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    },
+}
+
+
+# ----------------------------------------------
+# Function to Run McNemar’s Test for Two Prompting Styles
+# ----------------------------------------------
+def run_mcnemar_test(llm_name, base_prompt, test_prompt):
+    """Runs McNemar’s test comparing two prompting styles for a given LLM model."""
+   
+    contingency_table = np.zeros((2, 2), dtype=int)  # 2x2 matrix to store counts
+
+
+    # Iterate over test cases
+    for i in range(len(llm_data[llm_name][base_prompt])):
+        base_result = llm_data[llm_name][base_prompt][i]
+        test_result = llm_data[llm_name][test_prompt][i]
+
+
+        # Fill contingency table
+        if base_result == 1 and test_result == 1:
+            contingency_table[1, 1] += 1  # Both correct
+        elif base_result == 1 and test_result == 0:
+            contingency_table[1, 0] += 1  # Base correct, test incorrect
+        elif base_result == 0 and test_result == 1:
+            contingency_table[0, 1] += 1  # Base incorrect, test correct
+        else:
+            contingency_table[0, 0] += 1  # Both incorrect
+
+
+    # Ensure we have non-zero off-diagonal counts to perform the test
+    if contingency_table[0, 1] + contingency_table[1, 0] == 0:
+        return None, 1.0  # No change, return a neutral p-value
+
+
+    # Perform McNemar's test
+    result = mcnemar(contingency_table, exact=True)
+    return result.statistic, result.pvalue
+
+
+
+
+# ----------------------------------------------
+# Running McNemar's Test for All LLMs
+# ----------------------------------------------
+mcnemar_results = {}
+
+
+for llm in llm_data.keys():
+    mcnemar_results[llm] = {}
+    for prompt_style in llm_data[llm].keys():
+        if prompt_style != "Just the Problem":  # Compare each style against the baseline
+            stat, p_value = run_mcnemar_test(llm, "Just the Problem", prompt_style)
+            mcnemar_results[llm][prompt_style] = {"Test Statistic": stat, "p-value": p_value}
+
+
+# ----------------------------------------------
+# Output Results
+# ----------------------------------------------
+print("\nMcNemar’s Test Results (Comparing Each Prompting Style to 'Just the Problem'):\n")
+
+
+for llm, results in mcnemar_results.items():
+    print(f"LLM: {llm}")
+    for prompt_style, res in results.items():
+        stat_display = "N/A" if res["Test Statistic"] is None else f"{res['Test Statistic']:.4f}"
+        print(f"  {prompt_style} -> Test Statistic: {stat_display}, p-value: {res['p-value']:.4f}")
+    print("\n")  # Spacing between LLM results
+
+
+# McNemar Comparison Correction
+# ----------------------------------------------
+
+import numpy as np
+from statsmodels.stats.contingency_tables import mcnemar
+from statsmodels.stats.multitest import multipletests
+
+
+# ----------------------------------------------
+# Define LLM Performance Data
+# ----------------------------------------------
+# Each key represents an LLM, and the values contain accuracy results
+# (1 = correct, 0 = incorrect) for different problem types.
+
+
+llm_data = {
+    "ChatGPT Free": {
+        "Just the Problem": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "Intuition & Insights": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "Olympiad Problem & Solution": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Just Answer": [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Worked Solution": [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+    },
+    "ChatGPT Premium": {
+        "Just the Problem": [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+        "Intuition & Insights": [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0],
+        "Olympiad Problem & Solution": [1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Just Answer": [1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Worked Solution": [1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+    },
+    "Gemini": {
+        "Just the Problem": [1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+        "Intuition & Insights": [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "Olympiad Problem & Solution": [1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Just Answer": [1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "AIME Problem & Worked Solution": [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    },
+}
+
+
+# ----------------------------------------------
+# Function to Run McNemar’s Test for Two Prompting Styles
+# ----------------------------------------------
+def run_mcnemar_test(llm_name, base_prompt, test_prompt):
+    """Runs McNemar’s test comparing two prompting styles for a given LLM."""
+   
+    contingency_table = np.zeros((2, 2), dtype=int)  # 2x2 matrix to store counts
+
+
+    # Build contingency table
+    for base_result, test_result in zip(llm_data[llm_name][base_prompt], llm_data[llm_name][test_prompt]):
+        if base_result == 1 and test_result == 1:
+            contingency_table[1, 1] += 1  # Both correct
+        elif base_result == 1 and test_result == 0:
+            contingency_table[1, 0] += 1  # Base correct, test incorrect
+        elif base_result == 0 and test_result == 1:
+            contingency_table[0, 1] += 1  # Base incorrect, test correct
+        else:
+            contingency_table[0, 0] += 1  # Both incorrect
+
+
+    # If there are no discordant pairs, return p-value 1.0 (no significant difference)
+    if contingency_table[0, 1] + contingency_table[1, 0] == 0:
+        return None, 1.0
+
+
+    # Perform McNemar's test
+    result = mcnemar(contingency_table, exact=True)
+    return result.statistic, result.pvalue
+
+
+
+
+# ----------------------------------------------
+# Running McNemar's Test for All LLMs
+# ----------------------------------------------
+mcnemar_results = {}
+
+
+for llm in llm_data.keys():
+    mcnemar_results[llm] = {}
+    for prompt_style in llm_data[llm].keys():
+        if prompt_style != "Just the Problem":  # Compare each style against baseline
+            stat, p_value = run_mcnemar_test(llm, "Just the Problem", prompt_style)
+            mcnemar_results[llm][prompt_style] = {"Test Statistic": stat, "p-value": p_value}
+
+
+# ----------------------------------------------
+# Apply Multiple Comparisons Correction (Bonferroni)
+# ----------------------------------------------
+for llm, results in mcnemar_results.items():
+    p_values = [res['p-value'] for res in results.values()]  # Collect p-values
+    reject, pvals_corrected, _, _ = multipletests(p_values, alpha=0.05, method='bonferroni')  
+
+
+    # Update results with corrected p-values and rejection decision
+    for (style, res), corrected_p, reject_null in zip(results.items(), pvals_corrected, reject):
+        res['Corrected p-value'] = corrected_p
+        res['Reject Null'] = reject_null
+
+
+# ----------------------------------------------
+# Output Results
+# ----------------------------------------------
+print("\nMcNemar’s Test Results with Multiple Comparisons Correction (Bonferroni):\n")
+
+
+for llm, results in mcnemar_results.items():
+    print(f"LLM: {llm}")
+    for style, res in results.items():
+        stat_display = "N/A" if res["Test Statistic"] is None else f"{res['Test Statistic']:.4f}"
+        print(f"  {style} -> Test Statistic: {stat_display}, Original p-value: {res['p-value']:.4f}, "
+              f"Corrected p-value: {res['Corrected p-value']:.4f}, Reject Null: {res['Reject Null']}")
+    print("\n")  # Spacing between LLM results
